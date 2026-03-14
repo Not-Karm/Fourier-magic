@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fourier Epicycles Explained</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Mono&display=swap"
+        rel="stylesheet">
+
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <div class="header-titles">
+                <h1>Drawing with Math</h1>
+                <p>An interactive exploration of Fourier Epicycles.</p>
+            </div>
+            <a href="https://github.com/Not-Karm/Fourier-Magic" target="_blank" rel="noopener noreferrer" class="github-link" title="View Source on GitHub">
+                <svg viewBox="0 0 16 16" width="36" height="36" aria-hidden="true">
+                    <path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="educational-section">
+            <h2>What is happening here?</h2>
+            <p>The <strong>Discrete Fourier Transform (DFT)</strong> takes a complex shape (like a drawing) and breaks
+                it down into a series of simple rotating circles, called <strong>epicycles</strong>. When you connect
+                the tips of all these rotating circles together, they trace out your original drawing!</p>
+        </section>
+
+        <section class="app-interface">
+            <div class="canvas-container">
+                <canvas id="mainCanvas"></canvas>
+                <div class="status-overlay" id="statusBox">Ready for an image.</div>
+            </div>
+
+            <div class="equation-container">
+                <div id="equationBar" class="equation-bar hidden"></div>
+                <button id="copyEquationBtn" class="copy-btn hidden" title="Copy Equation">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="controls-panel">
+                <div class="upload-section">
+                    <input type="file" id="imageUpload" accept="image/*" class="file-input">
+                    <label for="imageUpload" class="btn btn-bold">Upload Image</label>
+                    <span id="fileName">No file chosen</span>
+                </div>
+
+                <div class="presets-section">
+                    <label>Or try a preset:</label>
+                    <div class="presets-gallery">
+                        <img src="images/preset_naruto.png" class="preset-img" title="Naruto">
+                        <img src="images/preset_spiderman.png" class="preset-img" title="Spider-Man">
+                        <img src="images/preset_gameboy.png" class="preset-img" title="Gameboy">
+                        <img src="images/preset_monstercan.png" class="preset-img" id="preset_monstercan"
+                            title="Monster Can">
+                        <img src="images/preset_f1car.png" class="preset-img" title="F1 Race Car">
+                        <img src="images/preset_dragon.png" class="preset-img" title="Dragon">
+                        <img src="images/preset_spaceship.png" class="preset-img" title="Spaceship">
+                        <img src="images/preset_skull.png" class="preset-img" title="Cyberpunk Skull">
+                        <img src="images/preset_mario.png" class="preset-img" title="Plumber Hat">
+                        <img src="images/preset_batman.png" class="preset-img" id="preset_batman" title="Hero Logo">
+                        <img src="images/preset_controller.png" class="preset-img" title="Controller">
+                        <img src="images/preset_camera.png" class="preset-img" title="Camera">
+                        <img src="images/preset_headphones.png" class="preset-img" title="Headphones">
+                        <img src="images/preset_pikachu.png" class="preset-img" title="Electric Mouse">
+                        <img src="images/preset_cat_1773472501737.png" class="preset-img" id="preset_cat" title="Cat">
+                    </div>
+                </div>
+
+                <div class="sliders-section">
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="epicyclesSlider">Detail (Epicycles):</label>
+                            <span id="epicyclesVal" class="slider-val">650</span>
+                        </div>
+                        <input type="range" id="epicyclesSlider" min="10" max="1000" value="650" class="slider">
+                        <div class="control-hint">More circles = more accurate drawing.</div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="speedSlider">Drawing Speed:</label>
+                            <span id="speedVal" class="slider-val">1x</span>
+                        </div>
+                        <input type="range" id="speedSlider" min="0.5" max="3" step="0.1" value="1" class="slider">
+                        <div class="control-hint">Controls how fast the circles rotate.</div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="pointDensity">Path Density:</label>
+                            <span class="value-display" id="densityValue">700</span>
+                        </div>
+                        <input type="range" id="pointDensity" min="100" max="1200" step="100" value="700"
+                            class="slider">
+                        <small>Resamples your image before doing the math.</small>
+                    </div>
+                </div>
+
+                <div class="actions-section">
+                    <button id="saveBtn" class="btn btn-action" style="display: none;">Save Drawing as Image</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="guidance-and-math">
+            <div class="guidance-box">
+                <h3>What works best?</h3>
+                <div class="guidance-grid">
+                    <div class="good">
+                        <h4>WORKS GREAT</h4>
+                        <ul>
+                            <li>Simple silhouettes</li>
+                            <li>Continuous single-line drawings</li>
+                            <li>High contrast line-art</li>
+                            <li>Logos with clear outlines</li>
+                        </ul>
+                    </div>
+                    <div class="bad">
+                        <h4>WORKS POORLY</h4>
+                        <ul>
+                            <li>Group photos showing many people</li>
+                            <li>Images with messy backgrounds</li>
+                            <li>Detailed landscapes</li>
+                        </ul>
+                        <p class="small-text">Why? The edge detector gets confused with too much detail. It needs a
+                            single continuous path.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="math-explainer">
+                <div class="explainer-box">
+                    <h3>The Math Behind the Magic</h3>
+                    <p>Instead of mapping an image purely by its X and Y physical coordinates, we can mathematically
+                        treat the entire continuous edge of a line drawing as a single sequence of complex numbers on an
+                        imaginary 2D plane.</p>
+                    <p>When we apply the <strong>Discrete Fourier Transform (DFT)</strong>, we take this complex spatial
+                        path (the "time-domain") and convert it into the "frequency-domain". The algorithm outputs a
+                        structured list of pure frequencies. For each frequency, the math determines an
+                        <strong>amplitude</strong> (the exact size of the circle) and a <strong>phase</strong> (its
+                        precise starting angle offset).</p>
+                    <p>By chaining these spinning circles (epicycles) end-to-end, organized from largest to smallest, we
+                        recreate the magic. As time ticks forward and the circles rotate at their specific speeds, the
+                        tip of the final circle exactly traces our original shape! It's effectively turning a spatial
+                        drawing into sound-like frequencies and playing it back as an animation.</p>
+                    <p>For an incredible visual deep-dive into this mathematics, check out the brilliant video <a
+                            href="https://www.youtube.com/watch?v=r6sGWTCMz2k" target="_blank"
+                            style="color: var(--accent-blue); font-weight: bold;">"But what is a Fourier series?" by
+                            3Blue1Brown</a>.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p>Vibe coded and built with love ❤️ by <a href="https://x.com/m0dAshwa" target="_blank"
+                    style="color: var(--accent-yellow); font-weight: 800; text-decoration: none;"
+                    onmouseover="this.style.textDecoration='underline'"
+                    onmouseout="this.style.textDecoration='none'">Karm</a> to celebrate Pi Day (March 14, 2026).</p>
+        </div>
+    </footer>
+
+    <script src="js/dft.js"></script>
+    <script src="js/tsp.js"></script>
+    <script src="js/imageProcessor.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
