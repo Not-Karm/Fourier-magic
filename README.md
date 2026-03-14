@@ -7,6 +7,8 @@
 
 An interactive, educational web application that brings the magic of mathematics to life. **Fourier Magic** takes any image (or selected presets) and mathematically deconstructs it into a continuous path, which is then re-drawn before your eyes using the power of the Discrete Fourier Transform (DFT) and rotating epicycles.
 
+You can check it out on [Link](https://fourier-magic-pi-day.karmrajput13.workers.dev/)
+
 ### 🖼️ Usage
 Since this is a client-side only application, simply clone the repository and open `index.html` in your favorite modern web browser, or serve it using any basic HTTP server.
 
